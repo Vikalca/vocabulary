@@ -1,15 +1,14 @@
-import { modules } from "../data.js";
-import state from "../state.js";
-import { saveModules } from "../storage.js";
+import store from "../store.js";
 import deleteIcon from "../assets/icons/Delete.svg";
 
 const renderLibrary = () => {
   const libraryContainer = document.querySelector(".library-container");
   if (!libraryContainer) return;
 
+  const modules = store.getModules();
+  const state = store.getState();
+
   const selectedId = state.selectedModule ?? modules[0]?.id ?? null;
-  if (state.selectedModule == null && selectedId != null)
-    state.selectedModule = selectedId;
 
   libraryContainer.innerHTML = `
     <h2>Your library</h2>
@@ -40,9 +39,7 @@ const renderLibrary = () => {
   libraryContainer
     .querySelector("#go-create")
     ?.addEventListener("click", () => {
-      document.dispatchEvent(
-        new CustomEvent("app:navigate", { detail: { view: "create" } }),
-      );
+      store.setCurrentView("create");
     });
 
   libraryContainer
@@ -54,36 +51,24 @@ const renderLibrary = () => {
       if (!btn) return;
 
       const action = btn.getAttribute("data-action");
-      const id = Number(btn.getAttribute("data-id"));
+      const id = btn.getAttribute("data-id");
       if (!id) return;
 
       if (action === "open") {
-        state.selectedModule = id;
-        state.currentIndex = 0;
-        state.showAnswer = false;
-        document.dispatchEvent(
-          new CustomEvent("app:navigate", { detail: { view: "study" } }),
-        );
+        store.selectModule(id);
+        store.setCurrentView("study");
         return;
       }
 
       if (action === "delete") {
-        const idx = modules.findIndex((m) => m.id === id);
-        if (idx === -1) return;
+        const moduleToDelete = modules.find((m) => m.id === id);
+        if (!moduleToDelete) return;
 
-        const ok = confirm(`Delete module "${modules[idx].title}"?`);
+        const ok = confirm(
+          `Delete module "${escapeHtml(moduleToDelete.title)}"?`,
+        );
         if (!ok) return;
-
-        modules.splice(idx, 1);
-        saveModules(modules);
-
-        if (state.selectedModule === id) {
-          state.selectedModule = modules[0]?.id ?? null;
-          state.currentIndex = 0;
-          state.showAnswer = false;
-        }
-
-        renderLibrary();
+        store.deleteModule(id);
       }
     });
 };

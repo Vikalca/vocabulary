@@ -1,20 +1,20 @@
-import state from "./state.js";
+import store from "./store.js";
 import renderLibrary from "./views/library.js";
 import renderStudy from "./views/study.js";
 import renderCreate from "./views/create.js";
-// import renderLearn from "./views/learn.js";
 
-function setVisible(view) {
+const render = () => {
+  const { currentView } = store.getState();
+
   const containers = {
     library: document.querySelector(".library-container"),
     study: document.querySelector(".study-container"),
     create: document.querySelector(".create-container"),
-    learn: document.querySelector(".learn-container"),
   };
 
   Object.entries(containers).forEach(([key, el]) => {
     if (!el) return;
-    el.style.display = key === view ? "block" : "none";
+    el.style.display = key === currentView ? "block" : "none";
   });
 
   const nav = document.querySelector("nav.app-nav");
@@ -22,25 +22,13 @@ function setVisible(view) {
     nav
       .querySelectorAll("button")
       .forEach((btn) => btn.classList.remove("active"));
-    const activeBtn =
-      view === "library"
-        ? nav.querySelector("#library-btn")
-        : view === "study"
-          ? nav.querySelector("#study-btn")
-          : view === "create"
-            ? nav.querySelector("#create-btn")
-            : null;
-    activeBtn?.classList.add("active");
+    const activeBtn = nav.querySelector(`#${currentView}-btn`);
+    if (activeBtn) activeBtn.classList.add("active");
   }
-}
 
-function render() {
-  setVisible(state.currentView);
-
-  if (state.currentView === "library") renderLibrary();
-  if (state.currentView === "study") renderStudy();
-  if (state.currentView === "create") renderCreate();
-  // if (state.currentView === "learn") renderLearn();
-}
+  if (currentView === "library") renderLibrary();
+  if (currentView === "create") renderCreate();
+  if (currentView === "study") renderStudy();
+};
 
 export default render;

@@ -1,6 +1,4 @@
-import { modules } from "../data.js";
-import state from "../state.js";
-import { saveModules } from "../storage.js";
+import store from "../store.js";
 
 const renderCreate = () => {
   const createContainer = document.querySelector(".create-container");
@@ -71,7 +69,7 @@ const renderCreate = () => {
     const answer = answerInput.value.trim();
     if (!question || !answer) return;
 
-    draftCards.push({ id: draftCards.length + 1, question, answer });
+    draftCards.push({ id: crypto.randomUUID(), question, answer });
     renderDraft();
 
     questionInput.value = "";
@@ -91,23 +89,14 @@ const renderCreate = () => {
       questionInput.focus();
       return;
     }
+
     const newModule = {
-      id: Date.now(),
       title,
-      createdAt: new Date(), //.toISOString()
-      cards: draftCards.map((card, index) => ({ ...card, id: index + 1 })),
+      cards: draftCards,
     };
 
-    modules.push(newModule);
-    saveModules(modules);
-
-    state.selectedModule = newModule.id;
-    state.currentIndex = 0;
-    state.showAnswer = false;
-
-    document.dispatchEvent(
-      new CustomEvent("app:navigate", { detail: { view: "study" } }),
-    );
+    store.addModule(newModule);
+    store.setCurrentView("study");
   });
 
   resetBtn.addEventListener("click", () => {

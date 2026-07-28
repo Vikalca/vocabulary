@@ -1,7 +1,8 @@
-import { modules } from "../data.js";
-import state from "../state.js";
+import store from "../store.js";
 
 const renderStudy = () => {
+  const modules = store.getModules();
+  const state = store.getState();
   const studyContainer = document.querySelector(".study-container");
   if (!studyContainer) return;
 
@@ -13,9 +14,7 @@ const renderStudy = () => {
     <p>No module selected. Please select a module from the library.</p>
     <button type="button" class="primary" id="go-library">Back to Library</button>`;
     document.getElementById("go-library").addEventListener("click", () => {
-      document.dispatchEvent(
-        new CustomEvent("app:navigate", { detail: { view: "library" } }),
-      );
+      store.setCurrentView("library");
     });
     return;
   }
@@ -28,15 +27,15 @@ const renderStudy = () => {
     <p>The selected module "${escapeHtml(selectedModule.title)}" has no cards. Please add cards to the module or select a different module.</p>
     <button type="button" class="primary" id="go-library">Back to Library</button>`;
     document.getElementById("go-library").addEventListener("click", () => {
-      document.dispatchEvent(
-        new CustomEvent("app:navigate", { detail: { view: "library" } }),
-      );
+      store.setCurrentView("library");
     });
     return;
   }
 
   if (state.currentIndex < 0) state.currentIndex = 0;
   if (state.currentIndex >= cards.length) state.currentIndex = 0;
+
+  const currentCard = cards[state.currentIndex];
 
   studyContainer.innerHTML = `
     <div class="study-header">
@@ -48,19 +47,19 @@ const renderStudy = () => {
     </div>
 
     <div class="card-container">
-      <div class="card" id="card" aria-label="Flashcard (click to flip)" role="button" tabindex="0">
+      <div class="card ${state.showAnswer ? "flip" : ""}" id="card" role="button" aria-label="Flashcard (click to flip)" role="button" tabindex="0">
         <div class="card-face card-front">
-          <p class="card-text front-text"></p>
+          <p class="card-text front-text">${escapeHtml(currentCard.question)}</p>
         </div>
         <div class="card-face card-back">
-          <p class="card-text back-text"></p>
+          <p class="card-text back-text">${escapeHtml(currentCard.answer)}</p>
         </div>
       </div>
     </div>
 
     <div class="controls">
       <button type="button" id="prev"><</button>
-      <span class="info" id="card-info"></span>
+      <span class="info" id="card-info">${state.currentIndex + 1}/${cards.length}</span>
       <button type="button" id="next">></button>
     </div>
   `;
@@ -68,59 +67,31 @@ const renderStudy = () => {
   studyContainer
     .querySelector("#back-library")
     .addEventListener("click", () => {
-      document.dispatchEvent(
-        new CustomEvent("app:navigate", { detail: { view: "library" } }),
-      );
+      store.setCurrentView("library");
     });
 
-  const frontText = document.querySelector(".front-text");
-  const backText = document.querySelector(".back-text");
   const card = document.getElementById("card");
   const prev = document.getElementById("prev");
-  const info = document.getElementById("card-info");
   const next = document.getElementById("next");
 
-  const flip = () => {
-    state.showAnswer = !state.showAnswer;
-    showCard();
-  };
+  card.addEventListener("click", () => {
+    store.flipCard();
+  });
 
-  card.addEventListener("click", flip);
   card.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      flip();
+      store.flipCard();
     }
   });
 
   prev.addEventListener("click", () => {
-    state.currentIndex = (state.currentIndex - 1 + cards.length) % cards.length;
-    state.showAnswer = false;
-    showCard();
+    store.prevCard();
   });
 
   next.addEventListener("click", () => {
-    state.currentIndex = (state.currentIndex + 1) % cards.length;
-    state.showAnswer = false;
-    showCard();
+    store.nextCard();
   });
-
-  showCard();
-
-  function showCard() {
-    const currentCard = cards[state.currentIndex];
-
-    frontText.textContent = currentCard.question;
-    backText.textContent = currentCard.answer;
-
-    if (state.showAnswer) {
-      card.classList.add("flip");
-    } else {
-      card.classList.remove("flip");
-    }
-
-    info.textContent = `${state.currentIndex + 1}/${cards.length}`;
-  }
 };
 
 function escapeHtml(str) {

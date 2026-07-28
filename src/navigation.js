@@ -4,24 +4,24 @@ import studyIcon from "./assets/icons/Study.svg";
 import addIcon from "./assets/icons/Add.svg";
 import settingsIcon from "./assets/icons/Settings.svg";
 import whiteAddIcon from "./assets/icons/White-add.svg";
-const router = (navigate) => {
+import store from "./store.js";
+
+const navigation = () => {
   const app = document.getElementById("app");
   if (!app) return;
 
-  const topbar = app.querySelector(".topbar");
-  if (topbar) {
+  const topbar = document.querySelector(".topbar");
+  if (topbar && !topbar.dataset.bound) {
     topbar.innerHTML = `
       <button class="primary" id="go-create" type="button"><img src="${whiteAddIcon}" alt="Add"></button>
       <button class="settings-btn" type="button"><img src="${settingsIcon}" alt="Settings"></button>
     `;
-    if (!topbar.dataset.bound) {
-      topbar.addEventListener("click", (e) => {
-        const btn = e.target.closest("button");
-        if (!btn) return;
-        if (btn.id === "go-create") navigate("create");
-      });
-      topbar.dataset.bound = "1";
-    }
+    topbar.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      if (btn.id === "go-create") store.setCurrentView("create");
+    });
+    topbar.dataset.bound = "1";
   }
 
   let nav = app.querySelector("nav.app-nav");
@@ -47,9 +47,9 @@ const router = (navigate) => {
         const btn = e.target.closest("button");
         if (!btn) return;
 
-        if (btn.id === "library-btn") navigate("library");
-        if (btn.id === "study-btn") navigate("study");
-        if (btn.id === "create-btn") navigate("create");
+        if (btn.id === "library-btn") store.setCurrentView("library");
+        if (btn.id === "study-btn") store.setCurrentView("study");
+        if (btn.id === "create-btn") store.setCurrentView("create");
       });
 
       nav.dataset.bound = "1";
@@ -57,4 +57,4 @@ const router = (navigate) => {
   }
 };
 
-export default router;
+export default navigation;

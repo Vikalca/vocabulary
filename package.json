@@ -1,7 +1,6 @@
 {
   "name": "vocabulary",
   "version": "1.0.0",
-  "main": "src/script.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
