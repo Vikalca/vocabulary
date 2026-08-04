@@ -13,7 +13,6 @@ class Store {
       mode: "flashcard",
     };
     this.#listeners = new Set();
-    const VIEWS = new Set(["library", "create", "study"]);
   }
 
   #hydrate() {
@@ -60,6 +59,7 @@ class Store {
   }
 
   setCurrentView(view) {
+    const VIEWS = new Set(["library", "create", "study"]);
     if (!VIEWS.has(view)) {
       throw new Error(`Unknown view: ${view}`);
     }
@@ -100,21 +100,30 @@ class Store {
     this.#resetStudyState(newModule.id);
     this.#notify();
   }
-  flipCard() {
-    this.#state.showAnswer = !this.#state.showAnswer;
-    this.#notify();
-  }
+  #getSelectedCardsCount() {
+    const selectedId = this.#state.selectedModule;
+    if (!selectedId) return 0;
 
+    const activeModule = this.#modules.find((m) => m.id === selectedId);
+    return activeModule?.cards?.length ?? 0;
+  }
   nextCard() {
-    this.#state.currentIndex++;
+    const cardsCount = this.#getSelectedCardsCount();
+    if (cardsCount === 0) return;
+
+    this.#state.currentIndex = (this.#state.currentIndex + 1) % cardsCount;
+
     this.#state.showAnswer = false;
     this.#notify();
   }
 
   prevCard() {
-    if (this.#state.currentIndex > 0) {
-      this.#state.currentIndex--;
-    }
+    const cardsCount = this.#getSelectedCardsCount();
+    if (cardsCount === 0) return;
+
+    this.#state.currentIndex =
+      (this.#state.currentIndex - 1 + cardsCount) % cardsCount;
+
     this.#state.showAnswer = false;
     this.#notify();
   }

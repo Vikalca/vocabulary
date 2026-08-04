@@ -1,4 +1,5 @@
 import store from "../store.js";
+import { escapeHtml } from "../escapeHTML.js";
 
 const renderStudy = () => {
   const modules = store.getModules();
@@ -74,33 +75,29 @@ const renderStudy = () => {
   const prev = document.getElementById("prev");
   const next = document.getElementById("next");
 
-  card.addEventListener("click", () => {
-    store.flipCard();
-  });
+  const handleFlip = () => {
+    card.classList.toggle("flip");
+  };
+
+  card.addEventListener("click", handleFlip);
 
   card.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      store.flipCard();
+      handleFlip();
     }
   });
-
   prev.addEventListener("click", () => {
     store.prevCard();
+    document.getElementById("card")?.focus();
   });
 
   next.addEventListener("click", () => {
     store.nextCard();
+    document.getElementById("card")?.focus();
   });
 };
 
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+escapeHtml();
 
 export default renderStudy;

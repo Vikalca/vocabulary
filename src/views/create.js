@@ -1,4 +1,5 @@
 import store from "../store.js";
+import { escapeHtml } from "../escapeHTML.js";
 
 const renderCreate = () => {
   const createContainer = document.querySelector(".create-container");
@@ -114,13 +115,6 @@ const renderCreate = () => {
   renderDraft();
 };
 
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+escapeHtml();
 
 export default renderCreate;

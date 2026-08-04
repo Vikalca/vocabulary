@@ -1,5 +1,6 @@
 import store from "../store.js";
 import deleteIcon from "../assets/icons/Delete.svg";
+import { escapeHtml } from "../escapeHTML.js";
 
 const renderLibrary = () => {
   const libraryContainer = document.querySelector(".library-container");
@@ -73,13 +74,6 @@ const renderLibrary = () => {
     });
 };
 
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+escapeHtml();
 
 export default renderLibrary;
