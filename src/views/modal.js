@@ -48,5 +48,4 @@ const renderModal = () => {
   });
 };
 
-escapeHtml();
 export default renderModal;

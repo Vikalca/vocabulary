@@ -1,21 +1,20 @@
 # Vocabulary
 
-A small single-page app for managing vocabulary modules and studying them with flashcards.  
-Built with **Vanilla JavaScript**, bundled with **Vite**, and persisted via **localStorage**.
+A production-grade, single-page application for managing vocabulary modules and studying them with flashcards.
+
+Built entirely with **Vanilla JavaScript (ESM)** without heavy frameworks to demonstrate deep understanding of DOM manipulation, State Management, and Clean Architecture.
 
 > Live demo: https://vikalca.github.io/vocabulary/
 
 ## Features
 
-- **Modules library**: create and manage vocabulary modules
-- **Flashcards study mode**: flip card (question ↔ answer), navigate through cards
-- **Create flow**: add cards to a draft, remove cards, save module
-- **Persistence**: data is saved to `localStorage` (no backend required)
-- **Seed data**: a starter module is preloaded if there is no saved data
+- **Modules library**: Create, delete and manage vocabulary modules.
+- **Study mode**: Interactive flashcards with CSS 3D flip animations and dynamic tracking.
+- **Draft Editor**: Real-time form validation and draft management.
+- **Persistence**: Data is safely synced to **localStorage**.
 
 ## Tech stack
 
-- **Vanilla JavaScript (ESM)**
-- **Vite** (dev server + build)
-- **CSS**
-- **localStorage** for persistence
+- **Core**: Vanilla JavaScript (ES6+), HTML5, CSS3 (Flexbox/Grid, CSS Variables)
+- **Build Tool**: Vite
+- **Deployment**: GitHub Pages

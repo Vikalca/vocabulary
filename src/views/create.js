@@ -81,12 +81,15 @@ const renderCreate = () => {
   saveBtn.addEventListener("click", () => {
     const title = titleInput.value.trim();
     if (!title) {
-      alert("Please enter a module title.");
+      store.addToast("Please enter a module title.", "error");
       titleInput.focus();
       return;
     }
     if (draftCards.length === 0) {
-      alert("Please add at least one card to save the module.");
+      store.addToast(
+        "Please add at least one card to save the module.",
+        "error",
+      );
       questionInput.focus();
       return;
     }
@@ -97,6 +100,7 @@ const renderCreate = () => {
     };
 
     store.addModule(newModule);
+    store.addToast(`Module "${title}" successfully created!`, "success");
     store.setCurrentView("study");
   });
 
@@ -114,7 +118,5 @@ const renderCreate = () => {
 
   renderDraft();
 };
-
-escapeHtml();
 
 export default renderCreate;

@@ -98,6 +98,4 @@ const renderStudy = () => {
   });
 };
 
-escapeHtml();
-
 export default renderStudy;

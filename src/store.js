@@ -15,6 +15,7 @@ class Store {
         type: null,
         payload: null,
       },
+      toasts: [],
     };
     this.#listeners = new Set();
   }
@@ -138,6 +139,26 @@ class Store {
     this.#state.modal.isOpen = false;
     this.#state.modal.type = null;
     this.#state.modal.payload = null;
+    this.#notify();
+  }
+  addToast(message, type = "success") {
+    const id = crypto.randomUUID();
+    const newToast = {
+      id,
+      message,
+      type,
+    };
+    this.#state.toasts.push(newToast);
+
+    this.#notify();
+
+    setTimeout(() => {
+      this.removeToast(id);
+    }, 3000);
+  }
+
+  removeToast(id) {
+    this.#state.toasts = this.#state.toasts.filter((toast) => toast.id !== id);
     this.#notify();
   }
 }

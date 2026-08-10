@@ -3,6 +3,7 @@ import renderLibrary from "./views/library.js";
 import renderStudy from "./views/study.js";
 import renderCreate from "./views/create.js";
 import renderModal from "./views/modal.js";
+import renderToasts from "./views/toasts.js";
 
 const render = () => {
   const { currentView } = store.getState();
@@ -31,6 +32,7 @@ const render = () => {
   if (currentView === "create") renderCreate();
   if (currentView === "study") renderStudy();
   renderModal();
+  renderToasts();
 };
 
 export default render;

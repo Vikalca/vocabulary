@@ -73,6 +73,4 @@ const renderLibrary = () => {
     });
 };
 
-escapeHtml();
-
 export default renderLibrary;
