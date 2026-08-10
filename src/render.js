@@ -2,6 +2,7 @@ import store from "./store.js";
 import renderLibrary from "./views/library.js";
 import renderStudy from "./views/study.js";
 import renderCreate from "./views/create.js";
+import renderModal from "./views/modal.js";
 
 const render = () => {
   const { currentView } = store.getState();
@@ -29,6 +30,7 @@ const render = () => {
   if (currentView === "library") renderLibrary();
   if (currentView === "create") renderCreate();
   if (currentView === "study") renderStudy();
+  renderModal();
 };
 
 export default render;

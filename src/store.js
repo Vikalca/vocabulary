@@ -2,6 +2,7 @@ class Store {
   #modules;
   #state;
   #listeners;
+  static #ALLOWED_VIEWS = new Set(["library", "create", "study"]);
 
   constructor() {
     this.#modules = this.#hydrate();
@@ -9,8 +10,11 @@ class Store {
       currentView: "library",
       selectedModule: null,
       currentIndex: 0,
-      showAnswer: false,
-      mode: "flashcard",
+      modal: {
+        isOpen: false,
+        type: null,
+        payload: null,
+      },
     };
     this.#listeners = new Set();
   }
@@ -55,12 +59,10 @@ class Store {
   #resetStudyState(moduleId) {
     this.#state.selectedModule = moduleId ?? null;
     this.#state.currentIndex = 0;
-    this.#state.showAnswer = false;
   }
 
   setCurrentView(view) {
-    const VIEWS = new Set(["library", "create", "study"]);
-    if (!VIEWS.has(view)) {
+    if (!Store.#ALLOWED_VIEWS.has(view)) {
       throw new Error(`Unknown view: ${view}`);
     }
     this.#state.currentView = view;
@@ -113,7 +115,6 @@ class Store {
 
     this.#state.currentIndex = (this.#state.currentIndex + 1) % cardsCount;
 
-    this.#state.showAnswer = false;
     this.#notify();
   }
 
@@ -124,7 +125,19 @@ class Store {
     this.#state.currentIndex =
       (this.#state.currentIndex - 1 + cardsCount) % cardsCount;
 
-    this.#state.showAnswer = false;
+    this.#notify();
+  }
+  openModal(type, payload) {
+    this.#state.modal.isOpen = true;
+    this.#state.modal.type = type;
+    this.#state.modal.payload = payload;
+
+    this.#notify();
+  }
+  closeModal() {
+    this.#state.modal.isOpen = false;
+    this.#state.modal.type = null;
+    this.#state.modal.payload = null;
     this.#notify();
   }
 }

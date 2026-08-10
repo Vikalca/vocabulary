@@ -65,11 +65,10 @@ const renderLibrary = () => {
         const moduleToDelete = modules.find((m) => m.id === id);
         if (!moduleToDelete) return;
 
-        const ok = confirm(
-          `Delete module "${escapeHtml(moduleToDelete.title)}"?`,
-        );
-        if (!ok) return;
-        store.deleteModule(id);
+        store.openModal("CONFIRM_DELETE", {
+          id: moduleToDelete.id,
+          title: moduleToDelete.title,
+        });
       }
     });
 };
