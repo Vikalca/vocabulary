@@ -48,7 +48,7 @@ const renderStudy = () => {
     </div>
 
     <div class="card-container">
-      <div class="card ${state.showAnswer ? "flip" : ""}" id="card" role="button" aria-label="Flashcard (click to flip)" role="button" tabindex="0">
+      <div class="card" id="card" role="button" aria-label="Flashcard (click to flip)" tabindex="0">
         <div class="card-face card-front">
           <p class="card-text front-text">${escapeHtml(currentCard.question)}</p>
         </div>

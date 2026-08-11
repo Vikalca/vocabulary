@@ -105,15 +105,18 @@ const renderCreate = () => {
   });
 
   resetBtn.addEventListener("click", () => {
-    const confirmed = confirm(
-      "Are you sure you want to reset the form? All unsaved data will be lost.",
-    );
-    if (!confirmed) return;
-    draftCards = [];
-    titleInput.value = "";
-    questionInput.value = "";
-    answerInput.value = "";
-    renderDraft();
+    store.openModal("CONFIRM_ACTION", {
+      title: "Reset Form",
+      message:
+        "Are you sure you want to reset the form? All unsaved data will be lost.",
+      onConfirm: () => {
+        draftCards = [];
+        titleInput.value = "";
+        questionInput.value = "";
+        answerInput.value = "";
+        renderDraft();
+      },
+    });
   });
 
   renderDraft();

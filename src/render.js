@@ -5,7 +5,10 @@ import renderCreate from "./views/create.js";
 import renderModal from "./views/modal.js";
 import renderToasts from "./views/toasts.js";
 
-const render = () => {
+const render = (type) => {
+  if (type === "toasts") return renderToasts();
+  if (type === "modal") return renderModal();
+
   const { currentView } = store.getState();
 
   const containers = {

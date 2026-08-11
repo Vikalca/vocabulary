@@ -14,38 +14,37 @@ const renderModal = () => {
 
   const { type, payload } = state.modal;
 
-  if (type === "CONFIRM_DELETE" && payload) {
+  if (type === "CONFIRM_ACTION" && payload) {
     modal.innerHTML = `
         <div class="modal-overlay">
             <div class="modal">
-                <h2>Delete module</h2>
-                <p>Are you sure you want to delete module "${escapeHtml(payload.title)}"?</p>
+                <h2>${escapeHtml(payload.title)}</h2>
+                <p>${escapeHtml(payload.message)}</p>
                 <div class="modal-actions">
                     <button class="btn btn-cancel">Cancel</button>
-                    <button class="btn btn-delete">Delete</button>
+                    <button class="btn btn-confirm">Yes</button>
                 </div>
             </div>
         </div>`;
-  }
 
-  const cancelBtn = document.querySelector(".btn-cancel");
-  const deleteBtn = document.querySelector(".btn-delete");
-  const overlay = document.querySelector(".modal-overlay");
+    const cancelBtn = modal.querySelector(".btn-cancel");
+    const confirmBtn = modal.querySelector(".btn-confirm");
+    const overlay = modal.querySelector(".modal-overlay");
 
-  cancelBtn.addEventListener("click", () => {
-    store.closeModal();
-  });
-
-  deleteBtn.addEventListener("click", () => {
-    store.deleteModule(payload.id);
-    store.closeModal();
-  });
-
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) {
+    cancelBtn.addEventListener("click", () => {
       store.closeModal();
-    }
-  });
+    });
+
+    confirmBtn.addEventListener("click", () => {
+      store.confirmModalAction();
+    });
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        store.closeModal();
+      }
+    });
+  }
 };
 
 export default renderModal;

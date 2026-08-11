@@ -2,13 +2,14 @@ class Store {
   #modules;
   #state;
   #listeners;
+  #currentModalCallback = null;
   static #ALLOWED_VIEWS = new Set(["library", "create", "study"]);
 
   constructor() {
     this.#modules = this.#hydrate();
     this.#state = {
       currentView: "library",
-      selectedModule: null,
+      selectedModule: this.#modules[0]?.id ?? null,
       currentIndex: 0,
       modal: {
         isOpen: false,
@@ -49,8 +50,8 @@ class Store {
     };
   }
 
-  #notify() {
-    this.#listeners.forEach((listener) => listener());
+  #notify(type) {
+    this.#listeners.forEach((listener) => listener(type));
   }
 
   #persist() {
@@ -131,15 +132,30 @@ class Store {
   openModal(type, payload) {
     this.#state.modal.isOpen = true;
     this.#state.modal.type = type;
-    this.#state.modal.payload = payload;
 
-    this.#notify();
+    if (payload && payload.onConfirm) {
+      this.#currentModalCallback = payload.onConfirm;
+      const { onConfirm, ...safePayload } = payload;
+      this.#state.modal.payload = safePayload;
+    } else {
+      this.#currentModalCallback = null;
+      this.#state.modal.payload = payload;
+    }
+
+    this.#notify("modal");
+  }
+  confirmModalAction() {
+    if (this.#currentModalCallback) {
+      this.#currentModalCallback();
+    }
+    this.closeModal();
   }
   closeModal() {
     this.#state.modal.isOpen = false;
     this.#state.modal.type = null;
     this.#state.modal.payload = null;
-    this.#notify();
+    this.#currentModalCallback = null;
+    this.#notify("modal");
   }
   addToast(message, type = "success") {
     const id = crypto.randomUUID();
@@ -150,7 +166,7 @@ class Store {
     };
     this.#state.toasts.push(newToast);
 
-    this.#notify();
+    this.#notify("toasts");
 
     setTimeout(() => {
       this.removeToast(id);
@@ -159,7 +175,7 @@ class Store {
 
   removeToast(id) {
     this.#state.toasts = this.#state.toasts.filter((toast) => toast.id !== id);
-    this.#notify();
+    this.#notify("toasts");
   }
 }
 

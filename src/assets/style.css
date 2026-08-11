@@ -364,12 +364,12 @@ button {
   background: #e5e5e5;
 }
 
-.btn-delete {
+.btn-confirm {
   background: #dc3545;
   color: #fff;
 }
 
-.btn-delete:hover {
+.btn-confirm:hover {
   background: #c82333;
 }
 .toast-container {
@@ -423,5 +423,37 @@ button {
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@media (max-width: 700px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr 64px;
+    grid-template-areas:
+      "topbar"
+      "main"
+      "sidebar";
+  }
+
+  .sidebar {
+    height: auto;
+    padding: 0;
+  }
+
+  .app-nav {
+    flex-direction: row;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .library-container {
+    padding: 0;
+  }
+
+  .create-form .actions {
+    grid-template-columns: 1fr;
   }
 }
