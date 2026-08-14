@@ -1,3 +1,5 @@
+import { storage } from "./storage";
+
 class Store {
   #modules;
   #state;
@@ -21,17 +23,30 @@ class Store {
     this.#listeners = new Set();
   }
 
-  #hydrate() {
-    try {
-      const saved = localStorage.getItem("modules");
-      if (!saved) return [];
+  #isValidModules(data) {
+    if (!Array.isArray(data)) return false;
+    return data.every((mod) => {
+      return (
+        typeof mod === "object" &&
+        mod !== null &&
+        typeof mod.id === "string" &&
+        typeof mod.title === "string" &&
+        Array.isArray(mod.cards)
+      );
+    });
+  }
 
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error("Failed to parse localStorage:", e);
-      localStorage.removeItem("modules");
+  #hydrate() {
+    const parsedData = storage.load;
+    if (!parsedData) return [];
+
+    if (!this.#isValidModules(parsedData)) {
+      console.warn(
+        "Invalid data structure in localStorage. Resetting to default.",
+      );
       return [];
     }
+    return parsedData;
   }
 
   getModules() {
@@ -55,7 +70,14 @@ class Store {
   }
 
   #persist() {
-    localStorage.setItem("modules", JSON.stringify(this.#modules));
+    try {
+      storage.save(this.#modules);
+    } catch (e) {
+      this.addToast(
+        "Failed to save data. Browser storage might be full.",
+        "error",
+      );
+    }
   }
 
   #resetStudyState(moduleId) {
