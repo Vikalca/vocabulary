@@ -6,10 +6,16 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "javascript",
+    "vanilla-js",
+    "vite",
+    "flashcards",
+    "vocabulary"
+  ],
+  "author": "vikalca",
   "license": "ISC",
-  "description": "",
+  "description": "A Vanilla JavaScript flashcard app for creating and studying vocabulary modules.",
   "devDependencies": {
     "vite": "^7.3.1"
   },

@@ -25,25 +25,35 @@ class Store {
 
   #isValidModules(data) {
     if (!Array.isArray(data)) return false;
-    return data.every((mod) => {
-      return (
-        typeof mod === "object" &&
-        mod !== null &&
-        typeof mod.id === "string" &&
-        typeof mod.title === "string" &&
-        Array.isArray(mod.cards)
+
+    return data.every((module) => {
+      if (
+        typeof module !== "object" ||
+        module === null ||
+        typeof module.id !== "string" ||
+        typeof module.title !== "string" ||
+        !Array.isArray(module.cards)
+      ) {
+        return false;
+      }
+
+      return module.cards.every(
+        (card) =>
+          typeof card === "object" &&
+          card !== null &&
+          typeof card.id === "string" &&
+          typeof card.question === "string" &&
+          typeof card.answer === "string",
       );
     });
   }
 
   #hydrate() {
-    const parsedData = storage.load;
+    const parsedData = storage.load();
     if (!parsedData) return [];
 
     if (!this.#isValidModules(parsedData)) {
-      console.warn(
-        "Invalid data structure in localStorage. Resetting to default.",
-      );
+      console.warn("Invalid data structure in localStorage.");
       return [];
     }
     return parsedData;
@@ -94,6 +104,10 @@ class Store {
   }
 
   selectModule(id) {
+    const exists = this.#modules.some((module) => module.id === id);
+
+    if (!exists) return false;
+
     this.#resetStudyState(id);
     this.#notify();
   }
@@ -114,6 +128,14 @@ class Store {
   }
 
   addModule(payload) {
+    if (
+      !payload ||
+      typeof payload.title !== "string" ||
+      !Array.isArray(payload.cards) ||
+      payload.cards.length === 0
+    ) {
+      return false;
+    }
     const payloadID = crypto.randomUUID();
     const newModule = {
       id: payloadID,
