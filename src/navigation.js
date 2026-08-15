@@ -13,9 +13,7 @@ const navigation = () => {
   const topbar = document.querySelector(".topbar");
   if (topbar && !topbar.dataset.bound) {
     topbar.innerHTML = `
-      <button class="primary" id="go-create" type="button"><img src="${whiteAddIcon}" alt="Add"></button>
-      <button class="settings-btn" type="button"><img src="${settingsIcon}" alt="Settings"></button>
-    `;
+      <button class="primary" id="go-create" type="button"><img src="${whiteAddIcon}" alt="Add"></button>    `;
     topbar.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
       if (!btn) return;
@@ -32,7 +30,6 @@ const navigation = () => {
         "beforeend",
         `
           <nav class="app-nav">
-          <button id="menu-btn"><img src="${menuIcon}" alt="Menu"/></button>
             <button id="library-btn"><img src="${libraryIcon}" alt="Library"></button>
             <button id="study-btn"><img src="${studyIcon}" alt="Study"></button>
             <button id="create-btn"><img src="${addIcon}" alt="Add"></button>

@@ -2,9 +2,24 @@
 
 A single-page application for managing vocabulary modules and studying them with flashcards.
 
-Built entirely with **Vanilla JavaScript (ESM)** without heavy frameworks to demonstrate deep understanding of DOM manipulation and State Management.
+The project was built to practice modular JavaScript architecture, application state management, DOM manipulation, client-side persistence, form validation, and responsive UI development.
 
 > Live demo: https://vikalca.github.io/vocabulary/
+
+## Preview
+
+### Library
+
+![Library page](docs/screenshots/library.png)
+
+### Create module
+
+![Create module page](docs/screenshots/create.png)
+
+### Study mode
+
+![Study mode - question](docs/screenshots/study-front.png)
+![Study mode - answer](docs/screenshots/study-back.png)
 
 ## Features
 
